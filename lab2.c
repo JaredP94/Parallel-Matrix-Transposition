@@ -21,7 +21,7 @@ int* generateSquareMatrix(int _dimension)
     for (int i=0; i < (_dimension*_dimension); i++)
     {
         _created_squareMatrix[i]=i+1;
-      //  printf("%d ",i);
+       //  printf("%d ",i);
     }
 
     return _created_squareMatrix;
@@ -40,7 +40,7 @@ void swap(int* i, int* j)
 // swapped or not
 bool isValueInArray(int array[], int value, int array_size) 
 {
-    for (int i = 0; i < array_size - 1; i++)
+    for (int i = 0; i < array_size; i++)
     {
         if (array[i] == value){
             return true;
@@ -53,7 +53,7 @@ bool isValueInArray(int array[], int value, int array_size)
 int* transpose(int* squareMatrix, int dimension)
 {
     int size=dimension*dimension;
-    int* swappedIndices = (int*)malloc((size-2) * sizeof(int));
+    int* swappedIndices = (int*)malloc((size) * sizeof(int));
     
     for (int index=1; index< size-1; index++)
     {
@@ -86,6 +86,7 @@ int* transposeParallel(int* squareMatrix, int dimension)
             }
         }
     }
+    free(swappedIndices);
 }
 
 // Function to print the matrix
@@ -109,7 +110,7 @@ void printMatrix(int* squareMatrix, int dimension)
 int main()
 {
 
-    int dimension = 256;
+    int dimension = 512;
 
     int* squareMatrix= generateSquareMatrix(dimension);
 
