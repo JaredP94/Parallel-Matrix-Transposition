@@ -67,6 +67,7 @@ int* transpose(int* squareMatrix, int dimension)
 // Function to print the matrix
 void printMatrix(int* squareMatrix, int dimension)
 {
+    // Calculates the number of digits in the largest number in the matrix
     int count = log10(squareMatrix[dimension*dimension-1]) + 2;
 
     for (int i=0; i< dimension*dimension; i++)
