@@ -1,0 +1,219 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% witseiepaper-2005.tex
+%
+%                       Ken Nixon (12 October 2005)
+%
+%                       Sample Paper for ELEN417/455 2005
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,twocolumn]{witseiepaper}
+%
+% All KJN's macros and goodies (some shameless borrowing from SPL)
+\usepackage{KJN}
+\usepackage[super]{nth}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{epstopdf}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{alltt}
+%\usepackage{matlab-prettifier}
+\usepackage{graphicx}
+\usepackage{changes}
+\usepackage{makecell}
+\usepackage{verbatim}
+\usepackage{balance}
+\usepackage{pdfpages}
+\usepackage{ragged2e}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+%\usepackage{flafter}
+
+%
+% PDF Info
+%
+\ifpdf
+\pdfinfo{
+	/Title (INSTRUCTIONS AND STYLE GUIDELINES FOR THE PREPARATION OF FINAL YEAR LABORATORY PROJECT PAPERS : 2005 VERSION)
+	/Author (Ken J Nixon)
+	/CreationDate (D:200309251200)
+	/ModDate (D:200510121530)
+	/Subject (ELEN417/455 Paper Format, 2005)
+	/Keywords (ELEN417, ELEN455, paper, instructions, style guidelines, laboratory project)
+}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	
+	\begin{titlepage}
+		
+		\newcommand{\HRule}{\rule{\linewidth}{0.3mm}} % Defines a new command for the horizontal lines, change thickness here
+		
+		\center % Center everything on the page
+		
+		%----------------------------------------------------------------------------------------
+		%	HEADING SECTIONS
+		%----------------------------------------------------------------------------------------
+		\includegraphics[width=0.3\textwidth]{EIE.png}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		%----------------------------------------------------------------------------------------
+		\textsc{\LARGE University of the Witwatersrand } \\[0.1cm] % Name of your university/college
+		\textsc{\LARGE School of Electrical and Information Engineering }\\[1cm] % Major heading such as course name
+		\textsc{\Large ELEN4020: Data Intensive Computing}\\[1.5cm] % Minor heading such as course title
+		
+		%----------------------------------------------------------------------------------------
+		%	TITLE SECTION
+		%----------------------------------------------------------------------------------------
+		
+		\HRule \\[0.4cm]
+		{ \huge \bfseries Laboratory Exercise 2} \\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		%----------------------------------------------------------------------------------------
+		%	AUTHOR SECTION
+		%----------------------------------------------------------------------------------------
+		\textsc{\Large 	\emph{Authors:} } \\[0.1cm]	 
+		
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				%			\emph{Author:} \\
+				Kayla-Jade Butkow \\ 714227 % Your name
+			\end{flushleft}
+		\end{minipage}
+		~
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				%	\emph{Author:}\\
+				Jared Ping \\ 704447
+			\end{flushright}
+		\end{minipage}\\[1cm]
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				%		\emph{Author:}\\
+				Lara Timm \\ 704157
+			\end{flushleft}
+		\end{minipage}
+		~
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				%		\emph{Author:} \\
+				Matthew van Rooyen \\ 706692
+			\end{flushright}
+		\end{minipage}\\[1cm]
+		
+		
+		
+		{\large Date Handed In: \nth{9} March, 2018}\\[1cm] 
+		
+	\end{titlepage}
+
+
+\pagestyle{plain}
+\setcounter{page}{1}
+\onecolumn
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\begin{table}[h]
+		\centering
+\caption{Performance of the algorithm using 4 threads}
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
+	\hline 
+	PThread &  &  &  \\ 
+	\hline 
+	OpenMP &  &  &  \\ 
+	\hline 
+\end{tabular}
+\end{table} 
+
+\begin{table}[h]
+		\centering
+\caption{Performance of the algorithm using 8 threads}
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
+	\hline 
+	PThread &  &  &  \\ 
+	\hline 
+	OpenMP &  &  &  \\ 
+	\hline 
+\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+		\centering
+	\caption{Performance of the algorithm using 16 threads}
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
+	\hline 
+	PThread &  &  &  \\ 
+	\hline 
+	OpenMP &  &  &  \\ 
+	\hline 
+\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+		\centering
+	\caption{Performance of the algorithm using 64 threads}
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
+	\hline 
+	PThread &  &  &  \\ 
+	\hline 
+	OpenMP &  &  &  \\ 
+	\hline 
+\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Performance of the algorithm using 128 threads}
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		& N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
+		\hline 
+		PThread &  &  &  \\ 
+		\hline 
+		OpenMP &  &  &  \\ 
+		\hline 
+	\end{tabular} 
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\bibliographystyle{witseie}
+\bibliography{individual}
+
+%{\tiny \vfill \hfill \today \hspace{5mm} witseie-paper-2003.\TeX}
+
+\newpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\onecolumn
+\begin{appendix} \label{sec:appendix}
+		
+
+\end{appendix}
+
+\end{document}
+
+" vim: ts=4
+" vim: tw=78
+" vim: autoindent
+" vim: shiftwidth=4
