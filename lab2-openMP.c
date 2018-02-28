@@ -59,7 +59,7 @@ bool isValueInArray(int array[], int value, int array_size)
 int* transpose(int* squareMatrix, int dimension, int noOfThreads)
 {
     int size = dimension*dimension;
-    int* swappedIndices = (int*)malloc((size) * sizeof(int));
+    int* swappedIndices = (int*)malloc((size - 2) * sizeof(int));
 
     #pragma omp parallel num_threads(noOfThreads)
     {
