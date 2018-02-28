@@ -8,9 +8,10 @@
 
 int* generateSquareMatrix(int _dimension)
 {
+    printf("entered function");
     static int * _created_squareMatrix; // Creates a pointer to a block of memory on the heap
     _created_squareMatrix =(int*)malloc((_dimension*_dimension) * sizeof(int));
-
+     printf("allocated memory");
     // If the matrix cannot be created, exit the program
     if (_created_squareMatrix == NULL)
     {
@@ -21,8 +22,10 @@ int* generateSquareMatrix(int _dimension)
     for (int i=0; i < (_dimension*_dimension); i++)
     {
         _created_squareMatrix[i]=i+1;
-       //  printf("%d ",i);
+        // printf("%d ",i);
     }
+
+    printf("Created array to be transposed");
 
     return _created_squareMatrix;
 }
@@ -54,12 +57,20 @@ int* transpose(int* squareMatrix, int dimension)
 {
     int size=dimension*dimension;
     int* swappedIndices = (int*)malloc((size) * sizeof(int));
+
+    #pragma omp for schedule(dynamic, 256) // make the creation of the matrix parallel
+    for (int i=0; i < (size); i++)
+    {
+        swappedIndices[i]=0;
+        // printf("%d ",i);
+    }
+    printf("Created 0 array");
     
     for (int index=1; index< size-1; index++)
     {
         int newPosition = (index*dimension)%(size-1);
         swappedIndices[index-1]=newPosition;
-        if (!isValueInArray(swappedIndices, index, size) && newPosition>index)
+        if (!isValueInArray(swappedIndices, index, index-1) && newPosition>index)
         {
             swap(&squareMatrix[index], &squareMatrix[newPosition]);
         }
@@ -70,7 +81,16 @@ int* transpose(int* squareMatrix, int dimension)
 int* transposeParallel(int* squareMatrix, int dimension)
 {
     int size=dimension*dimension;
-    int* swappedIndices = (int*)malloc((size-2) * sizeof(int));
+    int* swappedIndices = (int*)malloc((size) * sizeof(int));
+
+    #pragma omp for schedule(dynamic, 256) // make the creation of the matrix parallel
+    for (int i=0; i < (size); i++)
+    {
+        swappedIndices[i]=0;
+        // printf("%d ",i);
+    }
+    printf("Created 0 array");
+
     #pragma omp parallel num_threads(64)
     {    
         #pragma omp for ordered schedule(static, 256) //try chunk size as size/256
@@ -80,7 +100,7 @@ int* transposeParallel(int* squareMatrix, int dimension)
             swappedIndices[index-1]=newPosition;
 
             #pragma omp ordered 
-            if (!isValueInArray(swappedIndices, index, size) && newPosition>index)
+            if (!isValueInArray(swappedIndices, index, index-1) && newPosition>index)
             {
                 swap(&squareMatrix[index], &squareMatrix[newPosition]);
             }
