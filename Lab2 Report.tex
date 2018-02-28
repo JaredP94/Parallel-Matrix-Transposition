@@ -140,11 +140,9 @@ The multi-threaded algorithm was implemented using OpenMP. Multi-threading was p
 
 For all of the processes using OpenMP, the loops were divided into chunks of the size of the matrix divided by 256. Each function takes in a parameter called \texttt{noOfThreads}, which allows the user to specify the number of threads that should be used to execute the process.
 
-\subsection{Populating the matrix}
 Since the matrix is large, populating it in serial takes a large amount of time. It was thus implemented in parallel. Since each loop takes a consistent amount of time (as the same process is performed in each loop), static scheduling was used \cite{HPC}. 
 
-\subsection{Matrix Transposition}
-
+The transposition was also performed using static scheduling, as it proved to give the best performance. 
 
 \section{PThreads}
 
