@@ -31,6 +31,7 @@
 \usepackage{ragged2e}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{multirow}
 \usepackage[noend]{algpseudocode}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
 \definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
@@ -135,21 +136,34 @@ newIndex = (oldIndex*N)\%(N^2-1)
 \end{equation}
 
 \section{OpenMP}
-The multi-threaded algorithm was implemented using OpenMP. Multi-threading was performed on all aspects of the process, including the populating of the matrix, the populating of the index placeholder array, and the transposition of the array. 
+The multi-threaded algorithm was implemented using OpenMP. Multi-threading was performed on all aspects of the process, including the populating of the matrix and the transposition of the array. 
 
 For all of the processes using OpenMP, the loops were divided into chunks of the size of the matrix divided by 256. Each function takes in a parameter called \texttt{noOfThreads}, which allows the user to specify the number of threads that should be used to execute the process.
 
 \subsection{Populating the matrix}
 Since the matrix is large, populating it in serial takes a large amount of time. It was thus implemented in parallel. Since each loop takes a consistent amount of time (as the same process is performed in each loop), static scheduling was used \cite{HPC}. 
 
-\subsection{Populating the placeholder array}
+\subsection{Matrix Transposition}
+
 
 \section{PThreads}
 
 \section{Comparison of Performance}
 
 \begin{table}[h]
-		\centering
+	\centering
+	\caption{Performance of the algorithm when run as a serial process}
+	\begin{tabular}{|c|c|c|}
+	\hline
+	  N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\
+		\hline 
+		  &  &  \\ 
+		\hline 
+	\end{tabular} 
+\end{table} 
+
+\begin{table}[h]
+\centering
 \caption{Performance of the algorithm using 4 threads}
 \begin{tabular}{|c|c|c|c|}
 	\hline 
