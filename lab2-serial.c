@@ -38,7 +38,7 @@ int* generateSquareMatrix(int _dimension)
 // Function to swap two values
 void swap(int* i, int* j) 
 {
-    int temp;
+    long int temp;
     temp = *i;
     *i = *j;
     *j = temp;
@@ -61,35 +61,19 @@ bool isValueInArray(int array[], int value, int array_size)
 int* transpose(int* squareMatrix, int dimension)
 {
     int size = dimension * dimension;
-    // int* swappedIndices = (int*)malloc((size - 2) * sizeof(int));
-    // for (int i=0; i < (size); i++)
-    // {
-    //     swappedIndices[i] = 0;
-    // }
+
     printf("Created 0 array");
     
-    for (int index = 1; index < dimension; index++)
+    for (long int index = 1; index < dimension; index++)
     {
-        for (int j = 0; j < index; j++)
+        for (long int j = 0; j < index; j++)
         {
-            int currentIndex = index * dimension + j;
-            printf("current index %d ", currentIndex);
-            int newPosition = (currentIndex * dimension) % (size - 1);
+            long int currentIndex = index * dimension + j;
+            long int newPosition = (currentIndex * dimension) % (size - 1);
 
-          //  swap(&squareMatrix[currentIndex], &squareMatrix[newPosition]);
-              int temp = squareMatrix[currentIndex];
-                squareMatrix[currentIndex] = squareMatrix[newPosition];
-                squareMatrix[newPosition] = temp;
-                printf("temp %d ", temp);
-                printf("squareMatrix[currentIndex] %d", squareMatrix[currentIndex]);
-        // swappedIndices[index-1] = newPosition;
-        // if (!isValueInArray(swappedIndices, index, index-1) && newPosition > index)
-        // {
-        //     swap(&squareMatrix[index], &squareMatrix[newPosition]);
-        // }
+             swap(&squareMatrix[currentIndex], &squareMatrix[newPosition]);
         }
     }
-   // free(swappedIndices);
 }
 
 // Function to print the matrix
@@ -113,7 +97,7 @@ void printMatrix(int* squareMatrix, int dimension)
 int main()
 {
 
-    int dimension = 2048;
+    int dimension = 8192;
 
     int* squareMatrix= generateSquareMatrix(dimension);
 
@@ -125,7 +109,7 @@ int main()
     printf("Time spent serial %f", time_spent);
     printf("\n");
 
-    printMatrix(squareMatrix, dimension);
+   // printMatrix(squareMatrix, dimension);
 
     free(squareMatrix);
 
