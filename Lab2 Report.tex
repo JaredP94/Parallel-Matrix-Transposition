@@ -126,14 +126,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \section{Matrix Transposition}
-In order to allow for simple matrix transposition, the two-dimensional matrix is created as a one-dimensional array, populated in row-major form. The matrix is sequentially filled with integers corresponding to the index+1.
+In order to allow for simple matrix transposition, the two-dimensional square matrix is created as a one-dimensional array, populated in row-major form. The one-dimensional array is filled with integer values, where the value is equal to the $index + 1$.
 
-Transposition of the matrix begins with allocating memory for an array to store the indices of swapped values. For each existing index, a new index is calculated using Equation~\ref{newIndex} where N = number of rows = number of columns
+To ensure efficiency, only the lower left triangle of the matrix is traversed. This is sufficient as in matrix transposition the middle diagonal remains unchanged while each entry in the lower triangle is swapped with a single entry in the upper triangle. For each position in the lower triangle, the index of the entry with which that integer should be swapped is calculated using Equation~\ref{newIndexEqn}~\cite{inPlaceTranspose}.
 
 \begin{equation}
-\label{newIndex}
-newIndex = (oldIndex*N)\%(N^2-1)
+\label{newIndexEqn}
+index_{old} = (index_{new}*N)~mod(N^2-1)
 \end{equation}
+
+To ensure that the matrix is transposed in place, a traditional style swap function, making use of integer pointers, is implemented.
 
 \section{OpenMP}
 The multi-threaded algorithm was implemented using OpenMP. Multi-threading was performed on all aspects of the process, including the populating of the matrix and the transposition of the array. 
