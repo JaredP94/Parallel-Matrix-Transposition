@@ -27,7 +27,6 @@ int* generateSquareMatrix(int _dimension)
     for (int i = 0; i < (size); i++)
     {
         _created_squareMatrix[i] = i + 1;
-        // printf("%d ",i);
     }
 
     printf("Created array to be transposed");
@@ -42,19 +41,6 @@ void swap(int* i, int* j)
     temp = *i;
     *i = *j;
     *j = temp;
-}
-
-//Function to calculate whether the index to be swapped has already been
-// swapped or not
-bool isValueInArray(int array[], int value, int array_size) 
-{
-    for (int i = 0; i < array_size; i++)
-    {
-        if (array[i] == value){
-            return true;
-        }
-    }
-    return false;
 }
 
 //Function to transpose a square matrix
@@ -103,13 +89,16 @@ int main()
 
 // Time the serial transposition
     clock_t begin = clock();
-    transpose(squareMatrix, dimension);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Time spent serial %f", time_spent);
-    printf("\n");
 
-   // printMatrix(squareMatrix, dimension);
+    transpose(squareMatrix, dimension);
+
+    clock_t end = clock();
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    printf("Time spent serial %f", time_spent);
+    
+    printf("\n");
 
     free(squareMatrix);
 
