@@ -8,10 +8,14 @@
 int* generateSquareMatrix(int _dimension)
 {
     printf("entered function");
+
     int size = _dimension * _dimension;
+
     static int * _created_squareMatrix; // Creates a pointer to a block of memory on the heap
+    
     _created_squareMatrix = (int*) malloc((size) * sizeof(int));
-     printf("allocated memory");
+
+    printf("allocated memory");
 
     // If the matrix cannot be created, exit the program
     if (_created_squareMatrix == NULL)
@@ -19,6 +23,7 @@ int* generateSquareMatrix(int _dimension)
         printf("Could not allocate required memory\n");
         exit(1);
     }
+
     for (int i = 0; i < (size); i++)
     {
         _created_squareMatrix[i] = i + 1;
@@ -56,23 +61,35 @@ bool isValueInArray(int array[], int value, int array_size)
 int* transpose(int* squareMatrix, int dimension)
 {
     int size = dimension * dimension;
-    int* swappedIndices = (int*)malloc((size - 2) * sizeof(int));
-    for (int i=0; i < (size); i++)
-    {
-        swappedIndices[i] = 0;
-    }
+    // int* swappedIndices = (int*)malloc((size - 2) * sizeof(int));
+    // for (int i=0; i < (size); i++)
+    // {
+    //     swappedIndices[i] = 0;
+    // }
     printf("Created 0 array");
     
-    for (int index = 1; index < size-1; index++)
+    for (int index = 1; index < dimension; index++)
     {
-        int newPosition = (index*dimension)%(size-1);
-        swappedIndices[index-1] = newPosition;
-        if (!isValueInArray(swappedIndices, index, index-1) && newPosition > index)
+        for (int j = 0; j < index; j++)
         {
-            swap(&squareMatrix[index], &squareMatrix[newPosition]);
+            int currentIndex = index * dimension + j;
+            printf("current index %d ", currentIndex);
+            int newPosition = (currentIndex * dimension) % (size - 1);
+
+          //  swap(&squareMatrix[currentIndex], &squareMatrix[newPosition]);
+              int temp = squareMatrix[currentIndex];
+                squareMatrix[currentIndex] = squareMatrix[newPosition];
+                squareMatrix[newPosition] = temp;
+                printf("temp %d ", temp);
+                printf("squareMatrix[currentIndex] %d", squareMatrix[currentIndex]);
+        // swappedIndices[index-1] = newPosition;
+        // if (!isValueInArray(swappedIndices, index, index-1) && newPosition > index)
+        // {
+        //     swap(&squareMatrix[index], &squareMatrix[newPosition]);
+        // }
         }
     }
-    free(swappedIndices);
+   // free(swappedIndices);
 }
 
 // Function to print the matrix
@@ -96,7 +113,7 @@ void printMatrix(int* squareMatrix, int dimension)
 int main()
 {
 
-    int dimension = 128;
+    int dimension = 2048;
 
     int* squareMatrix= generateSquareMatrix(dimension);
 
@@ -107,6 +124,9 @@ int main()
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Time spent serial %f", time_spent);
     printf("\n");
+
+    printMatrix(squareMatrix, dimension);
+
     free(squareMatrix);
 
     return 0;
