@@ -82,27 +82,39 @@ void printMatrix(int* squareMatrix, int dimension)
     }
 }
 
-int main()
+void callFunctions(int dimension, int noOfThreads)
 {
+    int* squareMatrix= generateSquareMatrix(dimension, noOfThreads);
 
-    int dimension = 8192;
+    clock_t begin = clock();
 
-// Time the parallel transposition
-    int* squareMatrix= generateSquareMatrix(dimension, 4);
+    transpose(squareMatrix, dimension, noOfThreads);
 
-    clock_t begin2 = clock();
+    clock_t end = clock();
 
-    transpose(squareMatrix, dimension, 64);
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    clock_t end2 = clock();
-
-    double time_spent2 = (double)(end2 - begin2) / CLOCKS_PER_SEC;
-
-    printf("Time spent parallel %f", time_spent2);
+    printf("Dimension: %d Number of threads: %d Time to transpose: %f \n",dimension ,noOfThreads,time_spent);
 
     printf("\n");
 
     free(squareMatrix);
 
+}
+
+int main()
+{
+
+    int dimension[3] = {128, 1024, 8192};
+    int threads[5]= {4,8,16,64,128};
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            callFunctions(dimension[i], threads[j]);
+        }
+    }
+    
     return 0;
 }

@@ -7,15 +7,11 @@
 
 int* generateSquareMatrix(int _dimension)
 {
-    printf("entered function");
-
     int size = _dimension * _dimension;
 
     static int * _created_squareMatrix; // Creates a pointer to a block of memory on the heap
     
     _created_squareMatrix = (int*) malloc((size) * sizeof(int));
-
-    printf("allocated memory");
 
     // If the matrix cannot be created, exit the program
     if (_created_squareMatrix == NULL)
@@ -28,8 +24,6 @@ int* generateSquareMatrix(int _dimension)
     {
         _created_squareMatrix[i] = i + 1;
     }
-
-    printf("Created array to be transposed");
 
     return _created_squareMatrix;
 }
@@ -47,8 +41,6 @@ void swap(int* i, int* j)
 int* transpose(int* squareMatrix, int dimension)
 {
     int size = dimension * dimension;
-
-    printf("Created 0 array");
     
     for (long int index = 1; index < dimension; index++)
     {
@@ -80,11 +72,8 @@ void printMatrix(int* squareMatrix, int dimension)
     }
 }
 
-int main()
+void callFunctions(int dimension)
 {
-
-    int dimension = 8192;
-
     int* squareMatrix= generateSquareMatrix(dimension);
 
 // Time the serial transposition
@@ -96,11 +85,23 @@ int main()
 
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    printf("Time spent serial %f", time_spent);
+    printf("Dimension: %d Time to transpose: %f \n", dimension, time_spent);
     
     printf("\n");
 
     free(squareMatrix);
+}
+
+int main()
+{
+
+
+    int dimension[3] = {128, 1024, 8192};
+
+    for (int i = 0; i < 3; i++)
+    {
+            callFunctions(dimension[i]);
+    }
 
     return 0;
 }
