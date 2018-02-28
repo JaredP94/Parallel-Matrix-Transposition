@@ -4,6 +4,30 @@
 #include <stdbool.h>
 #include <time.h>
 #include <math.h>
+#include <pthread.h>
+
+#define NUM_THREADS 8
+
+struct ThreadData {
+    int start, stop;
+    int* array;
+};
+
+void* generateValuesForMatrix(void *ThreadData)
+{
+    printf("Generating values for matrix\n");
+    struct ThreadData* data = (struct ThreadData*) ThreadData;
+    int start = data->start;
+    int stop = data->stop;
+    int* array = data->array;
+
+    for (int i = start; i < stop; i++)
+    {
+        array[i] = i + 1;
+    }
+
+    return NULL;
+}
 
 int* generateSquareMatrix(int _dimension)
 {
@@ -11,7 +35,11 @@ int* generateSquareMatrix(int _dimension)
     int size = _dimension * _dimension;
     static int * _created_squareMatrix; // Creates a pointer to a block of memory on the heap
     _created_squareMatrix = (int*) malloc((size) * sizeof(int));
-     printf("allocated memory");
+    printf("allocated memory\n");
+
+    pthread_t thread[NUM_THREADS];
+    struct ThreadData data[NUM_THREADS];
+    int tasksPerThread = (size + NUM_THREADS - 1) / NUM_THREADS;
 
     // If the matrix cannot be created, exit the program
     if (_created_squareMatrix == NULL)
@@ -19,13 +47,26 @@ int* generateSquareMatrix(int _dimension)
         printf("Could not allocate required memory\n");
         exit(1);
     }
-    for (int i = 0; i < (size); i++)
-    {
-        _created_squareMatrix[i] = i + 1;
-        // printf("%d ",i);
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        data[i].start = i * tasksPerThread;
+        data[i].stop = (i+1) * tasksPerThread;
+        data[i].array = _created_squareMatrix;
     }
 
-    printf("Created array to be transposed");
+    data[NUM_THREADS - 1].stop = size;
+
+    /* Launch Threads */
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&thread[i], NULL, generateValuesForMatrix, &data[i]);
+    }
+
+    /* Wait for Threads to Finish */
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(thread[i], NULL);
+    }
+
+    printf("Created array to be transposed\n");
 
     return _created_squareMatrix;
 }
@@ -57,11 +98,12 @@ int* transpose(int* squareMatrix, int dimension)
 {
     int size = dimension * dimension;
     int* swappedIndices = (int*)malloc((size - 2) * sizeof(int));
+
     for (int i=0; i < (size); i++)
     {
         swappedIndices[i] = 0;
     }
-    printf("Created 0 array");
+    printf("Created 0 array\n");
     
     for (int index = 1; index < size-1; index++)
     {
@@ -101,12 +143,13 @@ int main()
     int* squareMatrix= generateSquareMatrix(dimension);
 
 // Time the serial transposition
+    //printMatrix(squareMatrix, dimension);
     clock_t begin = clock();
     transpose(squareMatrix, dimension);
     clock_t end = clock();
+    //printMatrix(squareMatrix, dimension);
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Time spent serial %f", time_spent);
-    printf("\n");
+    printf("Time spent pthread %f\n", time_spent);
     free(squareMatrix);
 
     return 0;
