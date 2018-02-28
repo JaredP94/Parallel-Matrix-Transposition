@@ -125,7 +125,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \section{Matrix Transposition}
-In order to allow for simple matrix transposition, the two-dimensional matrix is created as a one-dimensional matrix, populated in row-major form.
+In order to allow for simple matrix transposition, the two-dimensional matrix is created as a one-dimensional array, populated in row-major form. The matrix is sequentially filled with integers corresponding to the index+1.
+
+Transposition of the matrix begins with allocating memory for an array to store the indices of swapped values. For each existing index, a new index is calculated using Equation~\ref{newIndex} where N = number of rows = number of columns
+
+\begin{equation}
+\label{newIndex}
+newIndex = (oldIndex*N)\%(N^2-1)
+\end{equation}
 
 \section{OpenMP}
 
