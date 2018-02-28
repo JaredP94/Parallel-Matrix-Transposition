@@ -6,11 +6,12 @@
 #include <math.h>
  #include "omp.h"
 
-int* generateSquareMatrix(int _dimension)
+int* generateSquareMatrix(int _dimension, int noOfThreads)
 {
     printf("entered function");
+    int size = _dimension*_dimension;
     static int * _created_squareMatrix; // Creates a pointer to a block of memory on the heap
-    _created_squareMatrix =(int*)malloc((_dimension*_dimension) * sizeof(int));
+    _created_squareMatrix =(int*)malloc(size * sizeof(int));
      printf("allocated memory");
     // If the matrix cannot be created, exit the program
     if (_created_squareMatrix == NULL)
@@ -18,14 +19,14 @@ int* generateSquareMatrix(int _dimension)
         printf("Could not allocate required memory\n");
         exit(1);
     }
-    #pragma omp parallel num_threads(8)
+    #pragma omp parallel num_threads(noOfThreads)
     {
-    #pragma omp for schedule(dynamic, _dimension*_dimension/256) // make the creation of the matrix parallel
-    for (int i=0; i < (_dimension*_dimension); i++)
-    {
-        _created_squareMatrix[i]=i+1;
-        // printf("%d ",i);
-    }
+        #pragma omp for schedule(static, size/256) // make the creation of the matrix parallel
+        for (int i=0; i < (size); i++)
+        {
+            _created_squareMatrix[i] = i + 1;
+            // printf("%d ",i);
+        }
     }
 
     printf("Created array to be transposed");
@@ -37,9 +38,9 @@ int* generateSquareMatrix(int _dimension)
 void swap(int* i, int* j) 
 {
     int temp;
-    temp= *i;
-    *i= *j;
-    *j= temp;
+    temp = *i;
+    *i = *j;
+    *j = temp;
 }
 
 //Function to calculate whether the index to be swapped has already been
@@ -54,50 +55,20 @@ bool isValueInArray(int array[], int value, int array_size)
     }
     return false;
 }
-
-// Function to transpose a square matrix
-// int* transpose(int* squareMatrix, int dimension)
-// {
-//     int size=dimension*dimension;
-//     int* swappedIndices = (int*)malloc((size) * sizeof(int));
-//     #pragma omp parallel num_threads(128)
-//     {
-//     #pragma omp for schedule(dynamic, size/256) // make the creation of the matrix parallel
-//     for (int i=0; i < (size); i++)
-//     {
-//         swappedIndices[i]=0;
-//         // printf("%d ",i);
-//     }
-//     }
-//     printf("Created 0 array");
-    
-//     for (int index=1; index< size-1; index++)
-//     {
-//         int newPosition = (index*dimension)%(size-1);
-//         swappedIndices[index-1]=newPosition;
-//         if (!isValueInArray(swappedIndices, index, index-1) && newPosition>index)
-//         {
-//             swap(&squareMatrix[index], &squareMatrix[newPosition]);
-//         }
-//     }
-//     free(swappedIndices);
-// }
-
 // Function to transpose a square matrix
 int* transpose(int* squareMatrix, int dimension, int noOfThreads)
 {
-    int size=dimension*dimension;
+    int size = dimension*dimension;
     int* swappedIndices = (int*)malloc((size) * sizeof(int));
 
     #pragma omp parallel num_threads(noOfThreads)
     {
-    #pragma omp for schedule(dynamic, size/256) // make the creation of the matrix parallel
-    for (int i=0; i < (size); i++)
-    {
-        swappedIndices[i]=0;
-        // printf("%d ",i);
-    }
-   // printf("Created 0 array");
+        #pragma omp for schedule(static, size/256) // make the creation of the matrix parallel
+        for (int i=0; i < (size); i++)
+        {
+            swappedIndices[i]=0;
+            // printf("%d ",i);
+        }
   
         #pragma omp for ordered schedule(static, size/256) //try chunk size as size/256
         for (int index=1; index< size-1; index++)
@@ -121,7 +92,7 @@ void printMatrix(int* squareMatrix, int dimension)
     // Calculates the number of digits in the largest number in the matrix
     int count = log10(squareMatrix[dimension*dimension-1]) + 2;
 
-    for (int i=0; i< dimension*dimension; i++)
+    for (int i = 0; i < dimension*dimension; i++)
     {
         if (i % dimension==0)
         {
@@ -138,37 +109,15 @@ int main()
 
     int dimension = 128;
 
-    int* squareMatrix= generateSquareMatrix(dimension);
-
-//    printMatrix(squareMatrix, dimension);
-
-//    printf("\n\n");
-
-// Time the serial transposition
-    clock_t begin = clock();
-    transpose(squareMatrix, dimension, 1);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Time spent serial %f", time_spent);
-    printf("\n");
-    free(squareMatrix);
-
 // Time the parallel transposition
-    int* squareMatrix2= generateSquareMatrix(dimension);
+    int* squareMatrix2= generateSquareMatrix(dimension, 4);
     clock_t begin2 = clock();
-    transpose(squareMatrix2, dimension, 8);
+    transpose(squareMatrix2, dimension, 4);
     clock_t end2 = clock();
     double time_spent2 = (double)(end2 - begin2) / CLOCKS_PER_SEC;
     printf("Time spent parallel %f", time_spent2);
     printf("\n");
     free(squareMatrix2);
-
-    // printf("\n\n");
-    // printf("Final matrix: \n");
-
-    // printMatrix(squareMatrix2, dimension);
-    // printf("\n");
-    // free(squareMatrix2);
 
     return 0;
 }
