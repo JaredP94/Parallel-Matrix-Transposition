@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <sys/time.h>
 #include <math.h>
- #include "omp.h"
+#include "omp.h"
 
 int* generateSquareMatrix(int _dimension, int noOfThreads)
 {
@@ -86,15 +87,15 @@ void callFunctions(int dimension, int noOfThreads)
 {
     int* squareMatrix= generateSquareMatrix(dimension, noOfThreads);
 
-    clock_t begin = clock();
+    struct timeval  tv1, tv2;
+    gettimeofday(&tv1, NULL);
 
     transpose(squareMatrix, dimension, noOfThreads);
 
-    clock_t end = clock();
+    gettimeofday(&tv2, NULL);
 
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-    printf("Dimension: %d Number of threads: %d Time to transpose: %f \n",dimension ,noOfThreads,time_spent);
+    printf("Dimension: %d Number of threads: %d Time to transpose: ",dimension ,noOfThreads);
+    printf ("%f seconds\n", (double) (tv2.tv_usec - tv1.tv_usec) / CLOCKS_PER_SEC + (double) (tv2.tv_sec - tv1.tv_sec));
 
     printf("\n");
 

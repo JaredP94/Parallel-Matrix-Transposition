@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <sys/time.h>
 #include <math.h>
 
 int* generateSquareMatrix(int _dimension)
@@ -76,16 +77,16 @@ void callFunctions(int dimension)
 {
     int* squareMatrix= generateSquareMatrix(dimension);
 
-// Time the serial transposition
-    clock_t begin = clock();
+    // Time the serial transposition
+    struct timeval  tv1, tv2;
+    gettimeofday(&tv1, NULL);
 
     transpose(squareMatrix, dimension);
 
-    clock_t end = clock();
+    gettimeofday(&tv2, NULL);
 
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-    printf("Dimension: %d Time to transpose: %f \n", dimension, time_spent);
+    printf("Dimension: %d Time to transpose: ",dimension);
+    printf ("%f seconds\n", (double) (tv2.tv_usec - tv1.tv_usec) / CLOCKS_PER_SEC + (double) (tv2.tv_sec - tv1.tv_sec));
     
     printf("\n");
 
