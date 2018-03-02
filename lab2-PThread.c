@@ -3,11 +3,17 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <sys/time.h>
 #include <math.h>
 #include <pthread.h>
 
 struct ThreadData {
     int start, stop;
+    int* array;
+};
+
+struct ThreadTransposeData {
+    int start, stop, dimension, size;
     int* array;
 };
 
@@ -73,34 +79,59 @@ void swap(int* i, int* j)
     *j = temp;
 }
 
-//Function to calculate whether the index to be swapped has already been
-// swapped or not
-bool isValueInArray(int array[], int value, int array_size) 
+void* threadTranspose(void *ThreadTransposeData)
 {
-    for (int i = 0; i < array_size; i++)
-    {
-        if (array[i] == value){
-            return true;
-        }
-    }
-    return false;
-}
+    struct ThreadTransposeData* data = (struct ThreadTransposeData*) ThreadTransposeData;
+    int start = data->start;
+    int stop = data->stop;
+    int dimension = data->dimension;
+    int size = data->size;
+    int* array = data->array;
 
-//Function to transpose a square matrix
-int* transpose(int* squareMatrix, int dimension, int noOfThreads)
-{
-    int size = dimension * dimension;
-    
-    for (long int index = 1; index < dimension; index++)
+    for (long int index = start; index < stop; index++)
     {
         for (long int j = 0; j < index; j++)
         {
             long int currentIndex = index * dimension + j;
             long int newPosition = (currentIndex * dimension) % (size - 1);
 
-             swap(&squareMatrix[currentIndex], &squareMatrix[newPosition]);
+            swap(&array[currentIndex], &array[newPosition]);
         }
     }
+
+    return NULL;
+}
+
+//Function to transpose a square matrix
+int* transpose(int* squareMatrix, int dimension, int noOfThreads)
+{
+    int size = dimension * dimension;
+        
+    pthread_t thread[noOfThreads];
+    struct ThreadTransposeData data[noOfThreads];
+    int tasksPerThread = (dimension + noOfThreads - 1) / noOfThreads;
+
+    for (int i = 0; i < noOfThreads; i++) {
+        data[i].start = i * tasksPerThread;
+        data[i].stop = (i+1) * tasksPerThread;
+        data[i].dimension = dimension;
+        data[i].size = size;
+        data[i].array = squareMatrix;
+    }
+
+    data[noOfThreads - 1].stop = dimension;
+
+    /* Launch Threads */
+    for (int i = 0; i < noOfThreads; i++) {
+        pthread_create(&thread[i], NULL, threadTranspose, &data[i]);
+    }
+
+    /* Wait for Threads to Finish */
+    for (int i = 0; i < noOfThreads; i++) {
+        pthread_join(thread[i], NULL);
+    }
+
+    return squareMatrix;
 }
 
 // Function to print the matrix
@@ -125,15 +156,15 @@ void callFunctions(int dimension, int noOfThreads)
 {
     int* squareMatrix= generateSquareMatrix(dimension, noOfThreads);
 
-    clock_t begin = clock();
+    struct timeval  tv1, tv2;
+    gettimeofday(&tv1, NULL);
 
     transpose(squareMatrix, dimension, noOfThreads);
 
-    clock_t end = clock();
+    gettimeofday(&tv2, NULL);
 
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-    printf("Dimension: %d Number of threads: %d Time to transpose: %f \n",dimension ,noOfThreads,time_spent);
+    printf("Dimension: %d Number of threads: %d Time to transpose: ",dimension ,noOfThreads);
+    printf ("%f seconds\n", (double) (tv2.tv_usec - tv1.tv_usec) / CLOCKS_PER_SEC + (double) (tv2.tv_sec - tv1.tv_sec));
 
     printf("\n");
 
