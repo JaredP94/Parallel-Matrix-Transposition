@@ -158,6 +158,9 @@ The general process of PThread implementation involves correctly dividing up the
 Thread functions were implemented, which are non-returning pointer functions that are provided as arguments for a thread's workload. These functions only accept a single argument and thus structs were created to pass all relevant data which the thread required to complete the assigned workload.
 
 \section{Comparison of Performance}
+From the tables below, it is evident that, in general, the best performance is obtained using PThreads. However, for the small matrix (N$_{0}$ = N$_{1}$ = 128), OpenMP provides a better performance than PThreads. 
+
+It can also be seen that OpenMP does not, in general, provide a better performance than a serially executed code. This can be explained by the large overhead that is present whenever a parallel region is started or stopped. This overhead manifests since threads must be created at the start of each region. These threads must then be assigned tasks, and at the end of the for loop, the threads must wait at the barrier to be synchronised.
 
 \begin{table}[h]
 	\centering
