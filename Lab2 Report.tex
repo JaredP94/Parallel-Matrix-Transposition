@@ -160,7 +160,9 @@ Thread functions were implemented, which are non-returning pointer functions tha
 \section{Comparison of Performance}
 From the tables below, it is evident that, in general, the best performance is obtained using PThreads. However, for the small matrix (N$_{0}$ = N$_{1}$ = 128), OpenMP provides a better performance than PThreads. 
 
-It can also be seen that OpenMP does not, in general, provide a better performance than a serially executed code. This can be explained by the large overhead that is present whenever a parallel region is started or stopped. This overhead manifests since threads must be created at the start of each region. These threads must then be assigned tasks, and at the end of the for loop, the threads must wait at the barrier to be synchronised.
+It can also be seen that OpenMP does not, in general, provide a better performance than a serially executed code. This can be explained by the large overhead that is present whenever a parallel region is started or stopped \cite{HPC}. This overhead manifests since threads must be created at the start of each region \cite{HPC}. These threads must then be assigned tasks, and at the end of the for loop, the threads must wait at the barrier to be synchronised \cite{HPC}.
+
+\figref{fig:benchmark} provides a graphical description of the data in Tables \ref{tab:1} to \ref{tab:6}. In the figure, the times for each matrix size were averaged, and then plotted against the matrix size.
 
 \begin{table}[h]
 	\centering
@@ -171,7 +173,8 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\hline 
 		0.000270  & 0.010812 & 1.609882 \\ 
 		\hline 
-	\end{tabular} 
+	\end{tabular}
+\label{tab:1} 
 \end{table} 
 
 \begin{table}[h]
@@ -186,6 +189,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	OpenMP & 0.000138 & 0.011894 & 1.649183 \\ 
 	\hline 
 \end{tabular}
+\label{tab:2} 
 \end{table} 
 
 \begin{table}[h]
@@ -200,6 +204,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	OpenMP & 0.000207 & 0.010809 & 1.665707 \\ 
 	\hline 
 \end{tabular} 
+\label{tab:3} 
 \end{table}
 
 \begin{table}[h]
@@ -214,6 +219,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	OpenMP & 0.000168 & 0.012843 & 1.623063 \\ 
 	\hline 
 \end{tabular} 
+\label{tab:4} 
 \end{table}
 
 \begin{table}[h]
@@ -228,6 +234,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	OpenMP & 0.000573 & 0.012632 & 1.655354 \\ 
 	\hline 
 \end{tabular} 
+\label{tab:5} 
 \end{table}
 
 \begin{table}[h]
@@ -242,6 +249,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		OpenMP & 0.001360 & 0.011724 & 1.620541 \\ 
 		\hline 
 	\end{tabular} 
+\label{tab:6} 
 \end{table}
 
 \begin{figure} [htbp]
