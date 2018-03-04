@@ -272,6 +272,244 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 \pagenumbering{roman}
 \setcounter{page}{1}
 \begin{appendix} \label{sec:appendix}
+	
+\section{Pseudo-code}
+
+\begin{algorithm}[htbp]
+	\begin{algorithmic}
+		
+		\Function{generateSquareMatrix}{dimensions}
+		\State size = dimension $\times$ dimension;
+		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
+		\If{created\textunderscore squareMatrix is equal to null}
+		\State catch error
+		\EndIf
+		\For{i = 0 to \textunderscore size}
+		\State created\textunderscore squareMatrix[i] $\leftarrow$ i + 1
+		\EndFor
+		\EndFunction
+		\State \Return created\textunderscore squareMatrix; \\
+		
+		\Function{swap}{i, j}
+		\State temp == i
+		\State i == j
+		\State j = temp
+		\EndFunction \\
+		
+		\Function{transpose}{squareMatrix, dimension}
+		\State size = dimensions $\times$ dimensions
+		\For{index = 1 to dimensions}
+		\For{j = 0 to index}
+		\State currentIndex $\leftarrow$ index $\times$ dimension + j;
+		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
+		\EndFor
+		\EndFor
+		\State \verb|swap|(squareMatrix[currentIndex], squareMatrix[newPosition])
+		\EndFunction \\
+		
+		\Function{printMatrix}{squareMatrix, dimension}
+		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i = 0 to dimension $\times$ dimension}
+		\If{i \% dimension == 0}
+		\State catch error
+		\EndIf
+		\EndFor
+		\EndFunction \\
+		
+		\Function{callFunctions}{dimension}
+		\State squareMatrix $\leftarrow$ generateSquareMatrix(dimension)
+		\State \verb|transpose|(squareMatrix, dimension)
+		\EndFunction \\
+		
+		\Function{main}{}
+		\State dimension[3] == [128, 1024, 8192]
+		\For{i = 0 to 3}
+		\State \verb|callFunctions|(dimension[i])
+		\EndFor
+		\State \Return 0
+		\EndFunction
+		
+		\caption{Serial}
+		\label{alg:2}
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+	\begin{algorithmic}
+		
+		\Function{generateSquareMatrix}{dimensions, noOfThreads}
+		\State size = dimension $\times$ dimension;
+		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
+		\If{created\textunderscore squareMatrix is equal to null}
+		\State catch error
+		\EndIf
+		\For{i = 0 to \textunderscore size}
+		\State created\textunderscore squareMatrix[i] $\leftarrow$ i + 1
+		\EndFor
+		\EndFunction
+		\State \Return created\textunderscore squareMatrix; \\
+		
+		\Function{swap}{i, j}
+		\State temp == i
+		\State i == j
+		\State j = temp
+		\EndFunction \\
+		
+		\Function{transpose}{squareMatrix, dimension, noOfThreads}
+		\State size = dimensions $\times$ dimensions
+		\For{index = 1 to dimensions}
+		\For{j = 0 to index}
+		\State currentIndex $\leftarrow$ index $\times$ dimension + j
+		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
+		\EndFor
+		\EndFor
+		\State \verb|swap|(squareMatrix[currentIndex], squareMatrix[newPosition])
+		\EndFunction \\
+		
+		\Function{printMatrix}{squareMatrix, dimension}
+		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i = 0 to dimension $\times$ dimension}
+		\If{i \% dimension == 0}
+		\State catch error
+		\EndIf
+		\EndFor
+		\EndFunction \\
+		
+		\Function{callFunctions}{dimension, noOfThreads}
+		\State squareMatrix $\leftarrow$ \verb|generateSquareMatrix|(dimension, noOfThreads)
+		\State \verb|transpose|(squareMatrix, dimension, noOfThreads)
+		\EndFunction \\
+		
+		\Function{main}{}
+		\State dimension[3] == [128, 1024, 8192]
+		\State threads[5] == [4,8,16,64,128]
+		\For{i = 0 to 3}
+		\For{j = 0 to 5}
+		\State \verb|callFunctions|(dimension[i], threads[j])
+		\EndFor
+		\EndFor
+		\State \Return 0
+		\EndFunction
+		
+		\caption{OpenMP}
+		\label{alg:1}
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+	\begin{algorithmic}
+		\Function{generateValuesForMatrix}{ThreadData}
+		\State start = data $\rightarrow$ start
+		\State stop = data $\rightarrow$ stop
+		\State array = data $\rightarrow$ array;
+		\For{i = start to stop}
+		\State array[i] = i + 1
+		\EndFor
+		\State \Return Null
+		\EndFunction \\
+		
+		\Function{generateSquareMatrix}{dimensions, noOfThreads}
+		\State size = dimension $\times$ dimension;
+		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
+		\State tasksPerThread = (size + noOfThreads - 1) / noOfThreads
+		\If{created\textunderscore squareMatrix is equal to null}
+		\State catch error
+		\EndIf
+		\For{i = 0 to noOfThreads}
+		\State data[i].start $\leftarrow$ i * tasksPerThread
+		\State data[i].stop $\leftarrow$ (i+1) * tasksPerThread
+		\State data[i].array $\leftarrow$ created\textunderscore squareMatrix
+		\EndFor
+		\State data[noOfThreads - 1].stop $\leftarrow$ size
+		\For{i =0 to noOfThreads}
+		\State  \verb|pthread_create|(thread[i], null, \verb|generateValuesForMatrix|, data[i])
+		\EndFor
+		\For{i =0 to noOfThreads}
+		\State  \verb|pthread_join|(thread[i], null)
+		\EndFor
+		\EndFunction
+		\State \Return created\textunderscore squareMatrix; \\
+		
+		\Function{swap}{i, j}
+		\State temp == i
+		\State i == j
+		\State j = temp
+		\EndFunction \\
+		
+		\Function{threadTranspose}{ThreadTransposeData}
+		\State start = data $\rightarrow$ start
+		\State stop = data $\rightarrow$ stop
+		\State dimension = data $\rightarrow$ dimension
+		\State size = data $\rightarrow$ size
+		\State array = data $\rightarrow$ array
+		\For{index = start to stop}
+		\For{j = 0 to index}
+		\State currentIndex = index * dimension + j
+		\State newPosition = (currentIndex * dimension) \% (size - 1)
+		\State \verb|swap|(array[currentIndex], array[newPosition])
+		\EndFor
+		\EndFor
+		\State \Return null
+		\EndFunction \\
+		
+		\caption{PThread}
+		\label{alg:3}
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+	\begin{algorithmic}
+		
+		\Function{transpose}{squareMatrix, dimension, noOfThreads}
+		\State size = dimensions $\times$ dimensions
+		\State \verb|pthread_t| thread[noOfThreads]
+		\State tasksPerThread = (dimension + noOfThreads - 1) / noOfThreads
+		\For{i = 0 to noOfThreads}
+		\State data[i].start $\leftarrow$ i * tasksPerThread
+		\State data[i].stop $\leftarrow$ (i+1) * tasksPerThread
+		\State data[i].dimension $\leftarrow$ dimension
+		\State data[i].size $\leftarrow$ size
+		\State data[i].array $\leftarrow$ squareMatrix
+		\EndFor
+		\State data[noOfThreads - 1].\verb|stop| = dimension
+		\For{i = 0 to noOfThreads}
+		\State \verb|pthread_create|(thread[i], null, threadTranspose, data[i])
+		\EndFor
+		\For{i = 0 to noofThreads}
+		\State \verb|pthread_join|(thread[i], null)
+		\EndFor
+		\State \Return squareMatrix
+		\EndFunction \\
+		
+		\Function{printMatrix}{squareMatrix, dimension}
+		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i = 0 to dimension $\times$ dimension}
+		\If{i \% dimension == 0}
+		\State catch error
+		\EndIf
+		\EndFor
+		\EndFunction \\
+		
+		\Function{callFunctions}{dimension, noOfThreads}
+		\State squareMatrix $\leftarrow$ \verb|generateSquareMatrix|(dimension, noOfThreads)
+		\State \verb|transpose|(squareMatrix, dimension, noOfThreads)
+		\EndFunction \\
+		
+		\Function{main}{}
+		\State dimension[3] == [128, 1024, 8192]
+		\State threads[5] == [4,8,16,64,128]
+		\For{i = 0 to 3}
+		\For{j = 0 to 5}
+		\State \verb|callFunctions|(dimension[i], threads[j])
+		\EndFor
+		\EndFor
+		\State \Return 0
+		\EndFunction
+		
+		\caption{PThread Continued}
+		\label{alg:4}
+	\end{algorithmic}
+\end{algorithm}
 		
 
 \end{appendix}
