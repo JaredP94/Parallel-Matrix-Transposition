@@ -147,87 +147,96 @@ Since the matrix is large, populating it in serial takes a large amount of time.
 The transposition was also performed using static scheduling, as it proved to give the best performance. 
 
 \section{PThreads}
+The multi-threaded algorithm was implemented using POSIX Threads (PThreads). Multi-threading was performed on all aspects of the process, including the populating of the matrix and the transposition of the array. 
+
+The PThreads library offers a much lower level approach in implementing parallelism, offering high performance at the cost of substantial source code modification and code maintainability. This is noted when comparing the source code length of the OpenMP implementation to that of the PThreads implementation.
+
+In comparison to the OpenMP implementation, it can be seen that required work per thread is specified when each thread is created as opposed to continuously feeding chunks of data to each thread \cite{pthread}. This translates to a significant performance increase as the dataset scales. Each function takes in a parameter called \texttt{noOfThreads}, which allows the user to specify the number of threads that should be used to execute the process.
+
+The general process of PThread implementation involves correctly dividing up the required work based on the number of specified threads, thereafter initialising each thread and assigning it the appropriate work. An important component is to always ensure the threads synchronise after completing the specified workload.
+
+Thread functions were implemented, which are non-returning pointer functions that are provided as arguments for a thread's workload. These functions only accept a single argument and thus structs were created to pass all relevant data which the thread required to complete the assigned workload.
 
 \section{Comparison of Performance}
 
 \begin{table}[h]
 	\centering
-	\caption{Performance of the algorithm when run as a serial process}
+	\caption{Performance of the algorithm when run as a serial process (measured in seconds)}
 	\begin{tabular}{|c|c|c|}
 	\hline
 	  N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\
 		\hline 
-		  &  &  \\ 
+		0.000270  & 0.010812 & 1.609882 \\ 
 		\hline 
 	\end{tabular} 
 \end{table} 
 
 \begin{table}[h]
 \centering
-\caption{Performance of the algorithm using 4 threads}
+\caption{Performance of the algorithm using 4 threads (measured in seconds)}
 \begin{tabular}{|c|c|c|c|}
 	\hline 
 	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
 	\hline 
-	PThread &  &  &  \\ 
+	PThread & 0.000175 & 0.004886 & 0.766117 \\ 
 	\hline 
-	OpenMP &  &  &  \\ 
+	OpenMP & 0.000138 & 0.011894 & 1.649183 \\ 
 	\hline 
 \end{tabular}
 \end{table} 
 
 \begin{table}[h]
 		\centering
-\caption{Performance of the algorithm using 8 threads}
+\caption{Performance of the algorithm using 8 threads (measured in seconds)}
 \begin{tabular}{|c|c|c|c|}
 	\hline 
 	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
 	\hline 
-	PThread &  &  &  \\ 
+	PThread & 0.000184 & 0.003155 & 0.532490 \\ 
 	\hline 
-	OpenMP &  &  &  \\ 
+	OpenMP & 0.000207 & 0.010809 & 1.665707 \\ 
 	\hline 
 \end{tabular} 
 \end{table}
 
 \begin{table}[h]
 		\centering
-	\caption{Performance of the algorithm using 16 threads}
+	\caption{Performance of the algorithm using 16 threads (measured in seconds)}
 \begin{tabular}{|c|c|c|c|}
 	\hline 
 	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
 	\hline 
-	PThread &  &  &  \\ 
+	PThread & 0.000418 & 0.002654 & 0.476413 \\ 
 	\hline 
-	OpenMP &  &  &  \\ 
+	OpenMP & 0.000168 & 0.012843 & 1.623063 \\ 
 	\hline 
 \end{tabular} 
 \end{table}
 
 \begin{table}[h]
 		\centering
-	\caption{Performance of the algorithm using 64 threads}
+	\caption{Performance of the algorithm using 64 threads (measured in seconds)}
 \begin{tabular}{|c|c|c|c|}
 	\hline 
 	 & N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
 	\hline 
-	PThread &  &  &  \\ 
+	PThread & 0.001417 & 0.002739 & 0.482428 \\ 
 	\hline 
-	OpenMP &  &  &  \\ 
+	OpenMP & 0.000573 & 0.012632 & 1.655354 \\ 
 	\hline 
 \end{tabular} 
 \end{table}
 
 \begin{table}[h]
 	\centering
-	\caption{Performance of the algorithm using 128 threads}
+	\caption{Performance of the algorithm using 128 threads (measured in seconds)}
 	\begin{tabular}{|c|c|c|c|}
 		\hline 
 		& N$_{0}$ = N$_{1}$ = 128 &  N$_{0}$ = N$_{1}$ = 1024 & N$_{0}$ = N$_{1}$ = 8192 \\ 
 		\hline 
-		PThread &  &  &  \\ 
+		PThread & 0.002326 & 0.003241 & 0.448408 \\ 
 		\hline 
-		OpenMP &  &  &  \\ 
+		OpenMP & 0.001360 & 0.011724 & 1.620541 \\ 
 		\hline 
 	\end{tabular} 
 \end{table}
