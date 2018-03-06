@@ -287,13 +287,13 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\For{i = 0 to \textunderscore size}
 		\State created\textunderscore squareMatrix[i] $\leftarrow$ i + 1
 		\EndFor
-		\EndFunction
-		\State \Return created\textunderscore squareMatrix; \\
+		\State \Return created\textunderscore squareMatrix; 
+		\EndFunction \\
 		
 		\Function{swap}{i, j}
-		\State temp == i
-		\State i == j
-		\State j = temp
+		\State temp $\leftarrow$ i
+		\State i $\leftarrow$ j
+		\State j $\leftarrow$ temp
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension}
@@ -308,10 +308,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
 		\For{i = 0 to dimension $\times$ dimension}
 		\If{i \% dimension == 0}
-		\State catch error
+		\State print newline
 		\EndIf
 		\EndFor
 		\EndFunction \\
@@ -322,7 +322,7 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{main}{}
-		\State dimension[3] == [128, 1024, 8192]
+		\State dimension[3] = [128, 1024, 8192]
 		\For{i = 0 to 3}
 		\State \verb|callFunctions|(dimension[i])
 		\EndFor
@@ -350,9 +350,9 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\State \Return created\textunderscore squareMatrix; \\
 		
 		\Function{swap}{i, j}
-		\State temp == i
-		\State i == j
-		\State j = temp
+		\State temp $\leftarrow$ i
+		\State i $\leftarrow$ j
+		\State j $\leftarrow$ temp
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension, noOfThreads}
@@ -367,10 +367,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
 		\For{i = 0 to dimension $\times$ dimension}
 		\If{i \% dimension == 0}
-		\State catch error
+		\State print newline
 		\EndIf
 		\EndFor
 		\EndFunction \\
@@ -381,8 +381,8 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{main}{}
-		\State dimension[3] == [128, 1024, 8192]
-		\State threads[5] == [4,8,16,64,128]
+		\State dimension[3] = [128, 1024, 8192]
+		\State threads[5] = [4,8,16,64,128]
 		\For{i = 0 to 3}
 		\For{j = 0 to 5}
 		\State \verb|callFunctions|(dimension[i], threads[j])
@@ -431,13 +431,13 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\State \Return created\textunderscore squareMatrix; \\
 		
 		\Function{swap}{i, j}
-		\State temp == i
-		\State i == j
-		\State j = temp
+		\State temp $\leftarrow$ i
+		\State i $\leftarrow$ j
+		\State j $\leftarrow$ temp
 		\EndFunction \\
 		
 		\Function{threadTranspose}{ThreadTransposeData}
-		\State start = data $\rightarrow$ start
+		\State start = data.start
 		\State stop = data $\rightarrow$ stop
 		\State dimension = data $\rightarrow$ dimension
 		\State size = data $\rightarrow$ size
@@ -482,10 +482,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count == log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
 		\For{i = 0 to dimension $\times$ dimension}
 		\If{i \% dimension == 0}
-		\State catch error
+		\State print newline
 		\EndIf
 		\EndFor
 		\EndFunction \\
