@@ -14,6 +14,7 @@
 \usepackage{KJN}
 \usepackage[super]{nth}
 \usepackage{subcaption}
+\usepackage{caption}
 \usepackage{listings}
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{epstopdf}
@@ -32,12 +33,20 @@
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{multirow}
-\usepackage[noend]{algpseudocode}
+\usepackage{algpseudocode}
 \usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
 \definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
 \definecolor{mylilas}{RGB}{170,55,241}
 %\usepackage{flafter}
 
+%\newlength\myindent
+%\setlength\myindent{2em}
+%\newcommand\bindent{%
+%	\begingroup
+%	\setlength{\itemindent}{\myindent}
+%	\addtolength{\algorithmicident}{\myindent}
+%}
+%\newcolumntype\eindent{\endgroup}
 %
 % PDF Info
 %
@@ -281,13 +290,13 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\Function{generateSquareMatrix}{dimensions}
 		\State size = dimension $\times$ dimension;
 		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
-		\If{created\textunderscore squareMatrix is equal to null}
+		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
 		\EndIf
-		\For{i = 0 to \textunderscore size}
+		\For{i $\leftarrow$ 0 \textbf{to} \textunderscore size}
 		\State created\textunderscore squareMatrix[i] $\leftarrow$ i + 1
 		\EndFor
-		\State \Return created\textunderscore squareMatrix; 
+		\State \Return created\textunderscore squareMatrix
 		\EndFunction \\
 		
 		\Function{swap}{i, j}
@@ -297,10 +306,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension}
-		\State size = dimensions $\times$ dimensions
-		\For{index = 1 to dimensions}
-		\For{j = 0 to index}
-		\State currentIndex $\leftarrow$ index $\times$ dimension + j;
+		\State size $\leftarrow$ dimensions $\times$ dimensions
+		\For{index $\leftarrow$ 1 \textbf{to} dimensions}
+		\For{j $\leftarrow$ 0 \textbf{to} index}
+		\State currentIndex $\leftarrow$ index $\times$ dimension + j
 		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
 		\EndFor
 		\EndFor
@@ -308,9 +317,9 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
-		\For{i = 0 to dimension $\times$ dimension}
-		\If{i \% dimension == 0}
+		\State count $\leftarrow$ log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i $\leftarrow$ 0 \textbf{to} dimension $\times$ dimension}
+		\If{i \% dimension \textbf{is equal to} 0}
 		\State print newline
 		\EndIf
 		\EndFor
@@ -322,8 +331,8 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{main}{}
-		\State dimension[3] = [128, 1024, 8192]
-		\For{i = 0 to 3}
+		\State dimension[3] $\leftarrow$ [128, 1024, 8192]
+		\For{i $\leftarrow$ 0 \textbf{to} 3}
 		\State \verb|callFunctions|(dimension[i])
 		\EndFor
 		\State \Return 0
@@ -338,16 +347,18 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	\begin{algorithmic}
 		
 		\Function{generateSquareMatrix}{dimensions, noOfThreads}
-		\State size = dimension $\times$ dimension;
-		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
-		\If{created\textunderscore squareMatrix is equal to null}
+		\State size $\leftarrow$ dimension $\times$ dimension;
+		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) $\times$ sizeof(int))
+		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
-		\EndIf
-		\For{i = 0 to \textunderscore size}
+		\EndIf 
+		\State \textbf{\#pragma omp parallel}
+		\State\hspace{\algorithmicindent}
+	\For{i $\leftarrow$ 0 \textbf{to} \textunderscore size}
 		\State created\textunderscore squareMatrix[i] $\leftarrow$ i + 1
 		\EndFor
 		\EndFunction
-		\State \Return created\textunderscore squareMatrix; \\
+		\State \Return created\textunderscore squareMatrix \\
 		
 		\Function{swap}{i, j}
 		\State temp $\leftarrow$ i
@@ -356,9 +367,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension, noOfThreads}
-		\State size = dimensions $\times$ dimensions
-		\For{index = 1 to dimensions}
-		\For{j = 0 to index}
+		\State size $\leftarrow$ dimensions $\times$ dimensions
+		\State \textbf{\#pragma omp parallel}
+		\For{index $\leftarrow$ 1 \textbf{to} dimensions}
+		\For{j $\leftarrow$ 0 \textbf{to} index}
 		\State currentIndex $\leftarrow$ index $\times$ dimension + j
 		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
 		\EndFor
@@ -367,9 +379,9 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
-		\For{i = 0 to dimension $\times$ dimension}
-		\If{i \% dimension == 0}
+		\State count $\leftarrow$ log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i $\leftarrow$ 0 \textbf{to} dimension $\times$ dimension}
+		\If{i \% dimension \textbf{is equal to} 0}
 		\State print newline
 		\EndIf
 		\EndFor
@@ -381,10 +393,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{main}{}
-		\State dimension[3] = [128, 1024, 8192]
-		\State threads[5] = [4,8,16,64,128]
-		\For{i = 0 to 3}
-		\For{j = 0 to 5}
+		\State dimension[3] $\leftarrow$ [128, 1024, 8192]
+		\State threads[5] $\leftarrow$ [4,8,16,64,128]
+		\For{i $\leftarrow$ 0 \textbf{to} 3}
+		\For{j $\leftarrow$ 0 \textbf{to} 5}
 		\State \verb|callFunctions|(dimension[i], threads[j])
 		\EndFor
 		\EndFor
@@ -399,36 +411,36 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 \begin{algorithm}[htbp]
 	\begin{algorithmic}
 		\Function{generateValuesForMatrix}{ThreadData}
-		\State start = data $\rightarrow$ start
-		\State stop = data $\rightarrow$ stop
-		\State array = data $\rightarrow$ array;
-		\For{i = start to stop}
-		\State array[i] = i + 1
+		\State start $\leftarrow$ data.start
+		\State stop $\leftarrow$ data.stop
+		\State array $\leftarrow$ data.array;
+		\For{i $\leftarrow$ start \textbf{to} stop}
+		\State array[i] $\leftarrow$ i + 1
 		\EndFor
-		\State \Return Null
+		\State \Return null
 		\EndFunction \\
 		
 		\Function{generateSquareMatrix}{dimensions, noOfThreads}
-		\State size = dimension $\times$ dimension;
-		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
-		\State tasksPerThread = (size + noOfThreads - 1) / noOfThreads
-		\If{created\textunderscore squareMatrix is equal to null}
+		\State size $\leftarrow$ dimension $\times$ dimension
+		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) $\times$ sizeof(int))
+		\State tasksPerThread $\leftarrow$ (size + noOfThreads - 1) / noOfThreads
+		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
 		\EndIf
-		\For{i = 0 to noOfThreads}
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State data[i].start $\leftarrow$ i * tasksPerThread
 		\State data[i].stop $\leftarrow$ (i+1) * tasksPerThread
 		\State data[i].array $\leftarrow$ created\textunderscore squareMatrix
 		\EndFor
 		\State data[noOfThreads - 1].stop $\leftarrow$ size
-		\For{i =0 to noOfThreads}
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State  \verb|pthread_create|(thread[i], null, \verb|generateValuesForMatrix|, data[i])
 		\EndFor
-		\For{i =0 to noOfThreads}
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State  \verb|pthread_join|(thread[i], null)
 		\EndFor
 		\EndFunction
-		\State \Return created\textunderscore squareMatrix; \\
+		\State \Return created\textunderscore squareMatrix \\
 		
 		\Function{swap}{i, j}
 		\State temp $\leftarrow$ i
@@ -437,15 +449,15 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{threadTranspose}{ThreadTransposeData}
-		\State start = data.start
-		\State stop = data $\rightarrow$ stop
-		\State dimension = data $\rightarrow$ dimension
-		\State size = data $\rightarrow$ size
-		\State array = data $\rightarrow$ array
-		\For{index = start to stop}
-		\For{j = 0 to index}
-		\State currentIndex = index * dimension + j
-		\State newPosition = (currentIndex * dimension) \% (size - 1)
+		\State start $\leftarrow$ data.start
+		\State stop $\leftarrow$ data.stop
+		\State dimension $\leftarrow$ data.dimension
+		\State size $\leftarrow$ data.size
+		\State array $\leftarrow$ data.array
+		\For{index $\leftarrow$ start \textbf{to} stop}
+		\For{j $\leftarrow$ 0 \textbf{to} index}
+		\State currentIndex $\leftarrow$ index * dimension + j
+		\State newPosition $\leftarrow$ (currentIndex * dimension) \% (size - 1)
 		\State \verb|swap|(array[currentIndex], array[newPosition])
 		\EndFor
 		\EndFor
@@ -461,30 +473,30 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	\begin{algorithmic}
 		
 		\Function{transpose}{squareMatrix, dimension, noOfThreads}
-		\State size = dimensions $\times$ dimensions
+		\State size $\leftarrow$ dimensions $\times$ dimensions
 		\State \verb|pthread_t| thread[noOfThreads]
-		\State tasksPerThread = (dimension + noOfThreads - 1) / noOfThreads
-		\For{i = 0 to noOfThreads}
+		\State tasksPerThread $\leftarrow$ (dimension + noOfThreads - 1) / noOfThreads
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State data[i].start $\leftarrow$ i * tasksPerThread
 		\State data[i].stop $\leftarrow$ (i+1) * tasksPerThread
 		\State data[i].dimension $\leftarrow$ dimension
 		\State data[i].size $\leftarrow$ size
 		\State data[i].array $\leftarrow$ squareMatrix
 		\EndFor
-		\State data[noOfThreads - 1].\verb|stop| = dimension
-		\For{i = 0 to noOfThreads}
+		\State data[noOfThreads - 1].\verb|stop| $\leftarrow$ dimension
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State \verb|pthread_create|(thread[i], null, threadTranspose, data[i])
 		\EndFor
-		\For{i = 0 to noofThreads}
+		\For{i $\leftarrow$ 0 \textbf{to} noOfThreads}
 		\State \verb|pthread_join|(thread[i], null)
 		\EndFor
 		\State \Return squareMatrix
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count = log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
-		\For{i = 0 to dimension $\times$ dimension}
-		\If{i \% dimension == 0}
+		\State count $\leftarrow$ log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
+		\For{i $\leftarrow$ 0 \textbf{to} dimension $\times$ dimension}
+		\If{i \% dimension \textbf{is equal to} 0}
 		\State print newline
 		\EndIf
 		\EndFor
@@ -496,10 +508,10 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{main}{}
-		\State dimension[3] == [128, 1024, 8192]
-		\State threads[5] == [4,8,16,64,128]
-		\For{i = 0 to 3}
-		\For{j = 0 to 5}
+		\State dimension[3] $\leftarrow$ [128, 1024, 8192]
+		\State threads[5] $\leftarrow$ [4,8,16,64,128]
+		\For{i $\leftarrow$ 0 \textbf{to} 3}
+		\For{j $\leftarrow$ 0 \textbf{to} 5}
 		\State \verb|callFunctions|(dimension[i], threads[j])
 		\EndFor
 		\EndFor
