@@ -23,7 +23,7 @@ int* generateSquareMatrix(int _dimension, int noOfThreads)
     }
     #pragma omp parallel num_threads(noOfThreads)
     {
-        #pragma omp for schedule(static, size/256) // make the creation of the matrix parallel
+        #pragma omp for schedule(static,  (size + noOfThreads - 1) / noOfThreads) // make the creation of the matrix parallel
         for (int i = 0; i < size; i++)
         {
             _created_squareMatrix[i] = i + 1;
