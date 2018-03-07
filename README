@@ -1,0 +1,47 @@
+The github repository for this laboratory can be found at:
+https://github.com/JaredP94/ELEN4020-Lab2
+
+To clone our github repository, one of two urls can be used:
+
+HTTP  	https://github.com/JaredP94/ELEN4020-Lab2.git
+SSH  	git@github.com:JaredP94/ELEN4020-Lab2.git
+
+---------------------------------------------------------------------------
+BRANCHES:
+
+Solution  	Contains the code implementation for lab exercise 2.
+            The folder "code" contains three subfolders - OpenMP, 
+			PThread, Serial.
+			Within each of these folders, the relevant code files 
+			and excutables can be found.
+
+			OpenMP: lab2-OpenMP.c
+					OpenMP
+			PThread: lab2-PThread.c
+					PThread
+			Serial: lab2-serial.c
+					Serial
+		
+		lab2-OpenMP.c can be compiled as follows:
+		gcc -fopenmp -lgomp -lm lab2-OpenMP.c -o OpenMP
+
+		lab2-PThread.c can be compiled as follows:
+		gcc -lpthread -lm lab2-PThread.c -o PThread
+
+		lab2-serial.c can be compiled as follows:
+		gcc -lm lab2-serial.c -o Serial
+
+		lab2-OpenMP.c can thereafter be run as follows:
+		./OpenMP
+		lab2-PThread.c can thereafter be run as follows:
+		./PThread
+		lab2-serial.c can thereafter be run as follows:
+		./Serial
+
+Documentation 	Contains the .tex and .pdf files of our report for lab 
+		exercise 2.
+
+Master		Contains content of merged branches in relevant folders:
+		Code: code related files
+		Docs: documentation related files
+
