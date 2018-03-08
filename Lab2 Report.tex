@@ -284,12 +284,12 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	
 \section{Pseudo-code}
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[h!]
 	\begin{algorithmic}
 		
 		\Function{generateSquareMatrix}{dimensions}
-		\State size = dimension $\times$ dimension;
-		\State created\textunderscore squareMatrix = malloc((size) $\times$ sizeof(int))
+		\State size $\leftarrow$ dimension * dimension;
+		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) * sizeof(int))
 		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
 		\EndIf
@@ -306,19 +306,19 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension}
-		\State size $\leftarrow$ dimensions $\times$ dimensions
+		\State size $\leftarrow$ dimensions * dimensions
 		\For{index $\leftarrow$ 1 \textbf{to} dimensions}
 		\For{j $\leftarrow$ 0 \textbf{to} index}
-		\State currentIndex $\leftarrow$ index $\times$ dimension + j
-		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
+		\State currentIndex $\leftarrow$ index * dimension + j
+		\State newPosition $\leftarrow$ (currentIndex * dimension) \% (size - 1)
 		\EndFor
 		\EndFor
 		\State \verb|swap|(squareMatrix[currentIndex], squareMatrix[newPosition])
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count $\leftarrow$ log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
-		\For{i $\leftarrow$ 0 \textbf{to} dimension $\times$ dimension}
+		\State count $\leftarrow$ log10(squareMatrix[dimension * dimension - 1]) + 2
+		\For{i $\leftarrow$ 0 \textbf{to} dimension * dimension}
 		\If{i \% dimension \textbf{is equal to} 0}
 		\State print newline
 		\EndIf
@@ -347,8 +347,8 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 	\begin{algorithmic}
 		
 		\Function{generateSquareMatrix}{dimensions, noOfThreads}
-		\State size $\leftarrow$ dimension $\times$ dimension;
-		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) $\times$ sizeof(int))
+		\State size $\leftarrow$ dimension * dimension;
+		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) * sizeof(int))
 		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
 		\EndIf 
@@ -367,20 +367,20 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{transpose}{squareMatrix, dimension, noOfThreads}
-		\State size $\leftarrow$ dimensions $\times$ dimensions
+		\State size $\leftarrow$ dimensions * dimensions
 		\State \textbf{\#pragma omp parallel}
 		\For{index $\leftarrow$ 1 \textbf{to} dimensions}
 		\For{j $\leftarrow$ 0 \textbf{to} index}
-		\State currentIndex $\leftarrow$ index $\times$ dimension + j
-		\State newPosition $\leftarrow$ (currentIndex $\times$ dimension) \% (size - 1)
+		\State currentIndex $\leftarrow$ index * dimension + j
+		\State newPosition $\leftarrow$ (currentIndex * dimension) \% (size - 1)
 		\EndFor
 		\EndFor
 		\State \verb|swap|(squareMatrix[currentIndex], squareMatrix[newPosition])
 		\EndFunction \\
 		
 		\Function{printMatrix}{squareMatrix, dimension}
-		\State count $\leftarrow$ log10(squareMatrix[dimension $\times$ dimension - 1]) + 2
-		\For{i $\leftarrow$ 0 \textbf{to} dimension $\times$ dimension}
+		\State count $\leftarrow$ log10(squareMatrix[dimension * dimension - 1]) + 2
+		\For{i $\leftarrow$ 0 \textbf{to} dimension * dimension}
 		\If{i \% dimension \textbf{is equal to} 0}
 		\State print newline
 		\EndIf
@@ -421,8 +421,8 @@ It can also be seen that OpenMP does not, in general, provide a better performan
 		\EndFunction \\
 		
 		\Function{generateSquareMatrix}{dimensions, noOfThreads}
-		\State size $\leftarrow$ dimension $\times$ dimension
-		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) $\times$ sizeof(int))
+		\State size $\leftarrow$ dimension * dimension
+		\State created\textunderscore squareMatrix $\leftarrow$ malloc((size) * sizeof(int))
 		\State tasksPerThread $\leftarrow$ (size + noOfThreads - 1) / noOfThreads
 		\If{created\textunderscore squareMatrix \textbf{is equal to} null}
 		\State catch error
