@@ -48,7 +48,7 @@ int* transpose(int* squareMatrix, int dimension, int noOfThreads)
     int size = dimension * dimension;
     #pragma omp parallel num_threads(noOfThreads)
     {
-        #pragma omp for schedule(static, (size + noOfThreads - 1) / noOfThreads)
+        #pragma omp for schedule(guided, (size + noOfThreads - 1) / noOfThreads)
         for (long int index = 1; index < dimension; index++)
         {
             for (long int j = 0; j < index; j++)
